@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Dropdown from "./components/Dropdown";
 import Navbar from "./components/Navbar";
+import Login from "./pages/Login";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +31,9 @@ function App() {
     <>
       <Navbar toggle={toggle} />
       <Dropdown isOpen={isOpen} toggle={toggle} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </>
   );
 }
