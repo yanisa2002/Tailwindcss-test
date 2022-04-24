@@ -4,6 +4,8 @@ import "./App.css";
 import Dropdown from "./components/Dropdown";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
+import Notification from "./pages/Notification";
+import Register from "./pages/register";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +35,8 @@ function App() {
       <Dropdown isOpen={isOpen} toggle={toggle} />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/notification" element={<Notification />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </>
   );
