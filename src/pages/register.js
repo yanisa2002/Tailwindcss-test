@@ -2,7 +2,37 @@ import React from "react";
 import { useForm } from "react-hook-form";
 
 export default function App() {
+  // const defaultValues = {
+  //   Title: "",
+  //   Firstname: "",
+  //   LastName: "",
+  //   UserName: "",
+  //   Password: "",
+  //   Email: "",
+  //   Birthday: "",
+  //   Tel: "",
+  //   Address: {
+  //     HomeNo: "",
+  //     Soi: "",
+  //     Road: "",
+  //     Subdistrict: "",
+  //     District: "",
+  //     Province: "",
+  //     ZipCode: "",
+  //   },
+  //   IDCard: "",
+  //   wantToBeSeller: "",
+  // };
+
+  // const { register, handleSubmit } = useForm({ defaultValues });
   const { register, handleSubmit } = useForm();
+
+  // if (register("wantToBeSeller") === true) {
+  //   {
+  //     register("Role", { value: "Yes" });
+  //   }
+  // }
+
   const onSubmit = (data) => console.log(data);
 
   return (
@@ -21,17 +51,18 @@ export default function App() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <label
               className="block text-gray-darker text-md font-bold mb-2"
-              for="title"
+              for="Title"
             >
               คำนำหน้าชื่อ
             </label>
+
             <select
+              {...register("Title", { required: true })}
               className="border border-gray-300 rounded text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
-              id="title"
             >
-              <option value="select">เลือกคำนำหน้าชื่อ</option>
+              <option value="">เลือกคำนำหน้าชื่อ</option>
               <option value="Mr">นาย</option>
-              <option value="Ms">นาง</option>
+              <option value="Mrs">นาง</option>
               <option value="Miss">นางสาว</option>
             </select>
 
@@ -39,15 +70,16 @@ export default function App() {
               <div className="flex flex-col">
                 <label
                   className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                  for="firstname"
+                  for="Firstname"
                 >
                   ชื่อจริง
                 </label>
                 <input
-                  {...register("firstName", { required: true, maxLength: 20 })}
+                  {...register("Firstname", { required: true, maxLength: 20 })}
                   class="shadow appearance-none border rounded py-2 px-3 text-grey-darker"
-                  //   id="firstname"
-                  //   type="text"
+                  //   id="Firstname"
+                  type="text"
+                  pattern="^[ก-๏\s]+$"
                   placeholder="Firstname"
                 ></input>
               </div>
@@ -55,83 +87,91 @@ export default function App() {
               <div className="flex flex-col">
                 <label
                   className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                  for="lastname"
+                  for="LastName"
                 >
                   นามสกุล
                 </label>
                 <input
-                  {...register("lastName", { pattern: /^[A-Za-z]+$/i })}
+                  {...register("LastName", { required: true })}
                   class="shadow appearance-none border rounded py-2 px-3 text-grey-darker"
-                  //   id="lastname"
-                  //   type="text"
-                  placeholder="Lastname"
+                  //   id="LastName"
+                  type="text"
+                  pattern="^[ก-๏\s]+$"
+                  placeholder="LastName"
                 ></input>
               </div>
             </div>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="idCard"
+              for="IDCard"
             >
               เลขประจำตัวประชาขน
             </label>
             <input
-              {...register("idCard", { pattern: [0 - 9], maxLength: 13 })}
+              {...register("IDCard", {
+                required: true,
+                pattern: [0 - 9],
+                maxLength: 13,
+              })}
               class="shadow appearance-none border w-full rounded py-2 px-3 text-grey-darker"
-              //   id="idCard"
-              //   type="text"
+              //   id="IDCard"
+              type="text"
               placeholder="Personal ID"
             ></input>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="birthday"
+              for="Birthday"
             >
               วัน-เดือน-ปีเกิด
             </label>
             <select
               className="border border-gray-300 rounded text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
-              id="birthday"
+              id="Birthday"
             >
-              <option value="select">เลือกวันเดือนปีเกิด</option>
+              <option value="">เลือกวันเดือนปีเกิด</option>
             </select>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="email"
+              for="Email"
             >
               อีเมล
             </label>
             <input
+              {...register("Email", { required: true })}
               class="shadow appearance-none border w-full rounded py-2 px-3 text-grey-darker"
-              id="email"
-              type="email"
+              // id="Email"
+              type="Email"
               placeholder="Email"
             ></input>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="username"
+              for="UserName"
             >
               ชื่อผู้ใช้
             </label>
             <input
+              {...register("UserName", { required: true })}
               class="shadow appearance-none border w-full rounded py-2 px-3 text-grey-darker"
-              id="username"
+              // id="UserName"
               type="text"
-              placeholder="Username"
+              placeholder="UserName"
             ></input>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="password"
+              for="Password"
             >
               รหัสผ่าน
             </label>
             <input
+              {...register("Password", { required: true })}
               class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-              id="password"
-              type="text"
+              // id="Password"
+              type="Password"
               placeholder="Password"
             ></input>
 
@@ -150,13 +190,13 @@ export default function App() {
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="tel"
+              for="Tel"
             >
               เบอร์โทรศัพท์
             </label>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-              id="tel"
+              id="Tel"
               type="text"
               placeholder="Phone Number"
             ></input>
@@ -165,14 +205,15 @@ export default function App() {
             <div className="grid grid-cols-6 ">
               <label
                 className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                for="homeNo"
+                for="HomeNo"
               >
                 บ้านเลขที่
               </label>
 
               <input
+                {...register("HomeNo", { required: true, pattern: [0 - 9] })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                id="homeNo"
+                // id="HomeNo"
                 type="text"
                 placeholder="No."
               ></input>
@@ -185,22 +226,24 @@ export default function App() {
               </label>
 
               <input
+                {...register("Soi", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                id="sol"
+                // id="sol"
                 type="text"
                 placeholder="Sol"
               ></input>
 
               <label
                 className="block text-gray-darker text-md font-bold text-center mt-4 mb-2"
-                for="road"
+                for="Road"
               >
                 ถนน
               </label>
 
               <input
+                {...register("Road", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                id="road"
+                // id="Road"
                 type="text"
                 placeholder="Road"
               ></input>
@@ -209,28 +252,30 @@ export default function App() {
             <div className="grid grid-cols-4 mt-4 ">
               <label
                 className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                for="subdistrict"
+                for="Subdistrict"
               >
                 แขวง/ตำบล
               </label>
 
               <input
+                {...register("Subdistrict", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                id="subdistrict"
+                // id="Subdistrict"
                 type="text"
                 placeholder="Sub District"
               ></input>
 
               <label
                 className="block text-gray-darker text-md font-bold text-center mt-4 mb-2"
-                for="district"
+                for="District"
               >
                 เขต/อำเภอ
               </label>
 
               <input
+                {...register("District", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                id="district"
+                // id="District"
                 type="text"
                 placeholder="District"
               ></input>
@@ -239,28 +284,30 @@ export default function App() {
             <div className="grid grid-cols-4 mt-4 ">
               <label
                 className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                for="province"
+                for="Province"
               >
                 จังหวัด
               </label>
 
               <input
+                {...register("Province", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                id="province"
+                // id="Province"
                 type="text"
                 placeholder="Province"
               ></input>
 
               <label
                 className="block text-gray-darker text-md font-bold text-center mt-4 mb-2"
-                for="zipcode"
+                for="ZipCode"
               >
                 รหัสไปรษณีย์
               </label>
 
               <input
+                {...register("ZipCode", { required: true, pattern: [0 - 9] })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                id="zipcode"
+                id="ZipCode"
                 type="text"
                 placeholder="Zip Code"
               ></input>
@@ -269,7 +316,11 @@ export default function App() {
             <div className="block">
               <div className="mt-5">
                 <label className="inline-flex items-center">
-                  <input type="checkbox" class="w-6 h-6 rounded" />
+                  <input
+                    {...register("wantToBeSeller")}
+                    type="checkbox"
+                    class="w-6 h-6 rounded"
+                  />
                   <span className="text-gray-darker text-md font-bold ml-2">
                     ต้องการเป็นผู้ขาย
                   </span>
@@ -278,7 +329,10 @@ export default function App() {
             </div>
 
             <div className="mt-4 mb-7">
-              <button className="w-full inline-flex items-center justify-center px-4 py-2 bg-[#E54E3D] border border-transparent rounded-md font-semibold capitalize text-white hover:bg-red-700 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 disabled:opacity-25 transition">
+              <button
+                type="submit"
+                className="w-full inline-flex items-center justify-center px-4 py-2 bg-[#E54E3D] border border-transparent rounded-md font-semibold capitalize text-white hover:bg-red-700 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 disabled:opacity-25 transition"
+              >
                 ยืนยัน
               </button>
             </div>
@@ -293,8 +347,8 @@ export default function App() {
       </div>
     </div>
     // <form onSubmit={handleSubmit(onSubmit)}>
-    //   <input {...register("firstName", { required: true, maxLength: 20 })} />
-    //   <input {...register("lastName", { pattern: /^[A-Za-z]+$/i })} />
+    //   <input {...register("Firstname", { required: true, maxLength: 20 })} />
+    //   <input {...register("LastName", { pattern: /^[A-Za-z]+$/i })} />
     //   <input type="number" {...register("age", { min: 18, max: 99 })} />
     //   <input type="submit" />
     // </form>

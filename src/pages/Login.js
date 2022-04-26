@@ -85,6 +85,7 @@ const Login = () => {
               autoComplete="off"
               onChange={(e) => setUser(e.target.value)}
               value={user}
+              pattern=""
               required
             />
 
