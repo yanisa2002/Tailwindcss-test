@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Notification from "./pages/Notification";
 // import Register from "./pages/register";
-import Form from "./pages/testRegis";
+import FormSignup from "./pages/testRegis";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +37,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/notification" element={<Notification />} />
-        <Route path="/register" element={<Form />} />
+        <Route path="/register" element={<FormSignup />} />
         {/* <Route path="/register" element={<Register />} /> */}
         {/* <Route path="/register" element={<Noti />} /> */}
       </Routes>

@@ -1,79 +1,142 @@
-import React from "react";
-import "../App.css";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import React, { useState, useEffect } from "react";
+import { object } from "yup";
+// import useForm from "../components/useForm";
+// import validate from "../components/validateInfo";
 
-// const schema = yup.object().shape({
-//   firstName: yup.string().required("First Name should be required please"),
-//   lastName: yup.string().required(),
-//   email: yup.string().email().required(),
-//   age: yup.number().positive().integer().required(),
-//   password: yup.string().min(4).max(15).required(),
-//   confirmPassword: yup.string().oneOf([yup.ref("password"), null]),
-// });
+const FormSignup = () => {
+  const initialValues = {
+    username: "",
+    email: "",
+    password: "",
+  };
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
 
-function Form() {
-  //   const { register, handleSubmit, errors } = useForm({
-  //     resolver: yupResolver(schema),
-  //   });
+  const handleChange = (e) => {
+    // console.log(e.target);
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+    console.log(formValues);
+  };
 
-  //   const submitForm = (data) => {
-  //     console.log(data);
-  //   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formValues));
+    setIsSubmit(true);
+  };
+
+  useEffect(() => {
+    console.log(formErrors);
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      console.log(formValues);
+    }
+  }, [formErrors]);
+
+  const validate = (values) => {
+    const errors = {};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if (!values.username) {
+      errors.username = "Username is required!";
+    }
+    if (!values.email) {
+      errors.email = "Email is required!";
+    } else if (!regex.test(values.email)) {
+      errors.email = "This is not a valid email format!";
+    }
+    if (!values.password) {
+      errors.password = "Password is required!";
+    } else if (values.password.length < 4) {
+      errors.password = "Password must be more than 4 characters";
+    } else if (values.password.length > 10) {
+      errors.password = "Password cannot exceed more than 10 characters";
+    }
+    return errors;
+  };
   return (
-    <div className="Form">
-      <div className="title">Sign Up</div>
-      <div className="inputs">
-        <form>
-          {/* <form onSubmit={handleSubmit(submitForm)}> */}
+    <div className="form-content-right">
+      {Object.keys(formErrors).length === 0 && isSubmit ? (
+        <div>Signup successfully</div>
+      ) : (
+        <pre>{JSON.stringify(formValues, undefined, 2)}</pre>
+      )}
+      {/* <pre>{JSON.stringify(formValues, undefined, 2)}</pre> */}
+      <form className="form" onSubmit={handleSubmit}>
+        <h1>Get Start</h1>
+        <div className="form-inputs">
+          <label htmlFor="username" className="form-label">
+            Username
+          </label>
           <input
             type="text"
-            name="firstName"
-            // ref={register}
-            placeholder="First Name..."
+            name="username"
+            className="form-input"
+            placeholder="Enter your username"
+            value={formValues.username}
+            onChange={handleChange}
           />
-          {/* <p> {errors.firstName?.message} </p> */}
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name..."
-            // ref={register}
-          />
-          {/* <p> {errors.lastName?.message} </p> */}
+          <p className="text-red-600">{formErrors.username}</p>
+          {/* {errors.username && <p className="text-red-600">{errors.username}</p>} */}
+        </div>
+
+        <div className="form-inputs">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
           <input
             type="text"
             name="email"
-            placeholder="Email..."
-            // ref={register}
+            className="form-input"
+            placeholder="Enter your email"
+            value={formValues.email}
+            onChange={handleChange}
           />
-          {/* <p> {errors.email?.message} </p> */}
-          <input
-            type="text"
-            name="age"
-            placeholder="Age..."
-            //   ref={register}
-          />
-          {/* <p> {errors.age?.message} </p> */}
+          <p className="text-red-600">{formErrors.email}</p>
+          {/* {errors.email && <p className="text-red-600">{errors.email}</p>} */}
+        </div>
+
+        <div className="form-inputs">
+          <label htmlFor="password" className="form-label">
+            Password
+          </label>
           <input
             type="password"
             name="password"
-            placeholder="Password..."
-            // ref={register}
+            className="form-input"
+            placeholder="Enter your password"
+            value={formValues.password}
+            onChange={handleChange}
           />
-          {/* <p> {errors.password?.message} </p> */}
+          <p className="text-red-600">{formErrors.password}</p>
+          {/* {errors.password && <p className="text-red-600">{errors.password}</p>} */}
+        </div>
+
+        <div className="form-inputs">
+          <label htmlFor="password2" className="form-label">
+            Confirm Password
+          </label>
           <input
             type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password..."
-            // ref={register}
+            name="password2"
+            className="form-input"
+            placeholder="Enter your password2"
+            // value={formValues.password2}
+            // onChange={handleChange}
           />
-          {/* <p> {errors.confirmPassword && "Passwords Should Match!"} </p> */}
-          <input type="submit" id="submit" />
-        </form>
-      </div>
+          {/* {errors.password2 && (
+            <p className="text-red-600">{errors.password2}</p>
+          )} */}
+        </div>
+        <button className="form-input-btn" type="submit">
+          Sign Up
+        </button>
+
+        <span className="form-input-login">
+          Already have an account? Login <a href="#">here</a>
+        </span>
+      </form>
     </div>
   );
-}
+};
 
-export default Form;
+export default FormSignup;
