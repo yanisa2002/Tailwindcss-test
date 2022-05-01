@@ -1,39 +1,81 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
 
-export default function App() {
-  // const defaultValues = {
-  //   Title: "",
-  //   Firstname: "",
-  //   LastName: "",
-  //   UserName: "",
-  //   Password: "",
-  //   Email: "",
-  //   Birthday: "",
-  //   Tel: "",
-  //   Address: {
-  //     HomeNo: "",
-  //     Soi: "",
-  //     Road: "",
-  //     Subdistrict: "",
-  //     District: "",
-  //     Province: "",
-  //     ZipCode: "",
-  //   },
-  //   IDCard: "",
-  //   wantToBeSeller: "",
-  // };
+const Register = () => {
+  const defaultValues = {
+    Title: "",
+    Firstname: "",
+    LastName: "",
+    UserName: "",
+    Password: "",
+    Email: "",
+    Birthday: "",
+    Tel: "",
+    Address: {
+      HomeNo: "",
+      Soi: "",
+      Road: "",
+      Subdistrict: "",
+      District: "",
+      Province: "",
+      ZipCode: "",
+    },
+    IDCard: "",
+    wantToBeSeller: "",
+  };
+  const [formValues, setFormValues] = useState(defaultValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
 
-  // const { register, handleSubmit } = useForm({ defaultValues });
-  const { register, handleSubmit } = useForm();
+  const [comfirmPassword, setConfirmPassword] = useState("");
 
-  // if (register("wantToBeSeller") === true) {
-  //   {
-  //     register("Role", { value: "Yes" });
-  //   }
-  // }
+  const handleChange = (e) => {
+    // console.log(e.target);
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+    setConfirmPassword({ ...comfirmPassword, [name]: value });
+    console.log(formValues);
+    console.log(comfirmPassword);
+  };
 
-  const onSubmit = (data) => console.log(data);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formValues));
+    setIsSubmit(true);
+  };
+
+  useEffect(() => {
+    console.log(formErrors);
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      console.log(formValues);
+    }
+  }, [formErrors]);
+
+  const validate = (values) => {
+    const errors = {};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if (!values.Firstname) {
+      errors.Firstname = "กรุณากรอกชื่อ";
+    }
+    if (!values.lastname) {
+      errors.lastname = "กรุณากรอกนามสกุล";
+    }
+    if (!values.UserName) {
+      errors.UserName = "กรุณากรอกชื่อผู้ใช้";
+    }
+    if (!values.email) {
+      errors.email = "กรุณากรอกอีเมล";
+    } else if (!regex.test(values.email)) {
+      errors.email = "ไม่ตรงตามรูปแบบ";
+    }
+    if (!values.password) {
+      errors.password = "กรุณากรอกรหัสผ่าน";
+    } else if (values.password.length < 4) {
+      errors.password = "Password must be more than 4 characters";
+    } else if (values.password.length > 10) {
+      errors.password = "Password cannot exceed more than 10 characters";
+    }
+    return errors;
+  };
 
   return (
     <div className="h-full flex justify-center  bg-[#FFE5A3] font-prompt">
@@ -47,18 +89,24 @@ export default function App() {
         <div className="flex flex-col p-8 m-8 bg-white w-[600px] sm:min-w-[400px] min-w-[300px]  rounded-xl shadow-xl">
           <h1 className="text-xl font-bold mb-2">สร้างบัญชีของคุณ</h1>
           <h2 className="text-lg mb-4 text-[#E54E3D]">ข้อมูลส่วนตัว</h2>
-
-          <form onSubmit={handleSubmit(onSubmit)}>
+          {Object.keys(formErrors).length === 0 && isSubmit ? (
+            <div>Signup successfully</div>
+          ) : (
+            <pre>{JSON.stringify(formValues, undefined, 2)}</pre>
+          )}
+          <form onSubmit={handleSubmit}>
             <label
               className="block text-gray-darker text-md font-bold mb-2"
-              for="Title"
+              htmlFor="Title"
             >
               คำนำหน้าชื่อ
             </label>
 
             <select
-              {...register("Title", { required: true })}
               className="border border-gray-300 rounded text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
+              name="Title"
+              value={formValues.Title}
+              onChange={handleChange}
             >
               <option value="">เลือกคำนำหน้าชื่อ</option>
               <option value="Mr">นาย</option>
@@ -70,214 +118,225 @@ export default function App() {
               <div className="flex flex-col">
                 <label
                   className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                  for="Firstname"
+                  htmlFor="Firstname"
                 >
                   ชื่อจริง
                 </label>
                 <input
-                  {...register("Firstname", { required: true, maxLength: 20 })}
                   class="shadow appearance-none border rounded py-2 px-3 text-grey-darker"
-                  //   id="Firstname"
+                  name="Firstname"
                   type="text"
-                  pattern="^[ก-๏\s]+$"
                   placeholder="Firstname"
+                  value={formValues.Firstname}
+                  onChange={handleChange}
                 ></input>
               </div>
 
               <div className="flex flex-col">
                 <label
                   className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                  for="LastName"
+                  htmlFor="LastName"
                 >
                   นามสกุล
                 </label>
                 <input
-                  {...register("LastName", { required: true })}
                   class="shadow appearance-none border rounded py-2 px-3 text-grey-darker"
-                  //   id="LastName"
+                  name="LastName"
                   type="text"
-                  pattern="^[ก-๏\s]+$"
                   placeholder="LastName"
+                  value={formValues.LastName}
+                  onChange={handleChange}
                 ></input>
               </div>
             </div>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="IDCard"
+              htmlFor="IDCard"
             >
               เลขประจำตัวประชาขน
             </label>
             <input
-              {...register("IDCard", {
-                required: true,
-                pattern: [0 - 9],
-                maxLength: 13,
-              })}
               class="shadow appearance-none border w-full rounded py-2 px-3 text-grey-darker"
-              //   id="IDCard"
+              name="IDCard"
               type="text"
               placeholder="Personal ID"
+              value={formValues.IDCard}
+              onChange={handleChange}
             ></input>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="Birthday"
+              htmlFor="Birthday"
             >
               วัน-เดือน-ปีเกิด
             </label>
-            <select
+            <input
               className="border border-gray-300 rounded text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
-              id="Birthday"
-            >
-              <option value="">เลือกวันเดือนปีเกิด</option>
-            </select>
+              name="Birthday"
+              type="date"
+              placeholder="Select Birthday"
+              value={formValues.Birthday}
+              onChange={handleChange}
+            />
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="Email"
+              htmlFor="Email"
             >
               อีเมล
             </label>
             <input
-              {...register("Email", { required: true })}
               class="shadow appearance-none border w-full rounded py-2 px-3 text-grey-darker"
-              // id="Email"
-              type="Email"
+              name="Email"
+              type="text"
               placeholder="Email"
+              value={formValues.Email}
+              onChange={handleChange}
             ></input>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="UserName"
+              htmlFfor="UserName"
             >
               ชื่อผู้ใช้
             </label>
             <input
-              {...register("UserName", { required: true })}
               class="shadow appearance-none border w-full rounded py-2 px-3 text-grey-darker"
-              // id="UserName"
+              name="UserName"
               type="text"
               placeholder="UserName"
+              value={formValues.UserName}
+              onChange={handleChange}
             ></input>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="Password"
+              htmlfor="Password"
             >
               รหัสผ่าน
             </label>
             <input
-              {...register("Password", { required: true })}
               class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-              // id="Password"
+              name="Password"
               type="Password"
               placeholder="Password"
+              value={formValues.Password}
+              onChange={handleChange}
             ></input>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="comfirmpass"
+              htmlFor="comfirmPassword"
             >
               ยืนยันรหัสผ่าน
             </label>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-              id="confirmpass"
-              type="text"
+              id="confirmPassword"
+              type="password"
               placeholder="Confirm Password"
+              value={comfirmPassword} ////////////////////////////
+              onChange={handleChange}
             ></input>
 
             <label
               className="block text-gray-darker text-md font-bold mt-4 mb-2"
-              for="Tel"
+              htmlFor="Tel"
             >
               เบอร์โทรศัพท์
             </label>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-              id="Tel"
-              type="text"
+              name="Tel"
+              type="tel"
               placeholder="Phone Number"
+              value={formValues.Tel}
+              onChange={handleChange}
             ></input>
 
             <h2 className="text-lg mt-8 mb-4 text-[#E54E3D]">ที่อยู่</h2>
             <div className="grid grid-cols-6 ">
               <label
                 className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                for="HomeNo"
+                htmlFor="HomeNo"
               >
                 บ้านเลขที่
               </label>
 
               <input
-                {...register("HomeNo", { required: true, pattern: [0 - 9] })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                // id="HomeNo"
+                name="HomeNo"
                 type="text"
                 placeholder="No."
+                value={formValues.Address.HomeNo}
+                onChange={handleChange}
               ></input>
 
               <label
                 className="block text-gray-darker text-md font-bold text-center mt-4 mb-2"
-                for="sol"
+                for="Soi"
               >
                 ซอย
               </label>
 
               <input
-                {...register("Soi", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                // id="sol"
+                name="Soi"
                 type="text"
-                placeholder="Sol"
+                placeholder="Soi"
+                value={formValues.Address.Soi}
+                onChange={handleChange}
               ></input>
 
               <label
                 className="block text-gray-darker text-md font-bold text-center mt-4 mb-2"
-                for="Road"
+                htmlFor="Road"
               >
                 ถนน
               </label>
 
               <input
-                {...register("Road", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                // id="Road"
+                name="Road"
                 type="text"
                 placeholder="Road"
+                value={formValues.Address.Road}
+                onChange={handleChange}
               ></input>
             </div>
 
             <div className="grid grid-cols-4 mt-4 ">
               <label
                 className="block text-gray-darker text-md font-bold mt-4 mb-2"
-                for="Subdistrict"
+                htmlFor="Subdistrict"
               >
                 แขวง/ตำบล
               </label>
 
               <input
-                {...register("Subdistrict", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                // id="Subdistrict"
+                name="Subdistrict"
                 type="text"
                 placeholder="Sub District"
+                value={formValues.Address.Subdistrict}
+                onChange={handleChange}
               ></input>
 
               <label
                 className="block text-gray-darker text-md font-bold text-center mt-4 mb-2"
-                for="District"
+                htmlFor="District"
               >
                 เขต/อำเภอ
               </label>
 
               <input
-                {...register("District", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                // id="District"
+                name="District"
                 type="text"
                 placeholder="District"
+                value={formValues.Address.District}
+                onChange={handleChange}
               ></input>
             </div>
 
@@ -290,26 +349,28 @@ export default function App() {
               </label>
 
               <input
-                {...register("Province", { required: true })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                // id="Province"
+                name="Province"
                 type="text"
                 placeholder="Province"
+                value={formValues.Address.Province}
+                onChange={handleChange}
               ></input>
 
               <label
                 className="block text-gray-darker text-md font-bold text-center mt-4 mb-2"
-                for="ZipCode"
+                htmlFor="ZipCode"
               >
                 รหัสไปรษณีย์
               </label>
 
               <input
-                {...register("ZipCode", { required: true, pattern: [0 - 9] })}
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-                id="ZipCode"
+                name="ZipCode"
                 type="text"
                 placeholder="Zip Code"
+                value={formValues.Address.ZipCode}
+                onChange={handleChange}
               ></input>
             </div>
 
@@ -317,9 +378,11 @@ export default function App() {
               <div className="mt-5">
                 <label className="inline-flex items-center">
                   <input
-                    {...register("wantToBeSeller")}
+                    name="wantToBeSeller"
                     type="checkbox"
                     class="w-6 h-6 rounded"
+                    value={formValues.wantToBeSeller}
+                    onChange={handleChange}
                   />
                   <span className="text-gray-darker text-md font-bold ml-2">
                     ต้องการเป็นผู้ขาย
@@ -353,4 +416,6 @@ export default function App() {
     //   <input type="submit" />
     // </form>
   );
-}
+};
+
+export default Register;
